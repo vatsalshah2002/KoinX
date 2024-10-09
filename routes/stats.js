@@ -1,6 +1,5 @@
-// routes/stats.js
 const express = require('express');
-const CryptoData = require('../models/CryptoData'); // Adjust the path as necessary
+const CryptoData = require('../models/CryptoData'); 
 const router = express.Router();
 
 const calculateStandardDeviation = (prices) => {
@@ -9,7 +8,6 @@ const calculateStandardDeviation = (prices) => {
     return Math.sqrt(variance);
   };
 
-// Define the /stats route
 router.get('/', async (req, res) => {
   try {
     const { coin } = req.query;
@@ -28,7 +26,7 @@ router.get('/', async (req, res) => {
       .exec();
 
     if (!latestData) {
-      return res.status(404).json({ error: 'No data found for the requested coin' });
+      return res.status(404).json({ error: 'No data found' });
     }
 
     res.json({
@@ -38,7 +36,7 @@ router.get('/', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error fetching crypto data:', error);
+    console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -56,29 +54,28 @@ router.get('/deviation', async (req, res) => {
         return res.status(400).json({ error: 'Invalid coin parameter' });
       }
   
-      // Fetch the last 100 records
       const records = await CryptoData.find({ name: coinNameMap[coin] })
         .sort({ fetched_at: -1 })
         .limit(100)
         .exec();
   
       if (records.length === 0) {
-        return res.status(404).json({ error: 'No data found for the requested coin' });
+        return res.status(404).json({ error: 'No data found' });
       }
   
-      // Extract prices
+      
       const prices = records.map(record => record.current_price);
   
       // Calculate standard deviation
       const deviation = calculateStandardDeviation(prices);
   
       res.json({
-        deviation: deviation.toFixed(2) // Return the deviation rounded to 2 decimal places
+        deviation: deviation.toFixed(2) 
       });
   
     } catch (error) {
-      console.error('Error fetching crypto data:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Server error' });
     }
   });
 

@@ -5,15 +5,13 @@ const fetchCryptoData = require('./jobs/cryptoJob');
 const statsRoute = require('./routes/stats');
 const app = express();
 
-// Connect to MongoDB
 connectDB();
 
-// Schedule the job to run every 2 hours
-//cron.schedule('0 */2 * * *', () => {
-  //console.log('Fetching cryptocurrency data...');
-  //fetchCryptoData();
-//});
-fetchCryptoData();  // Manually trigger the job once when the server starts
+cron.schedule('0 */2 * * *', () => {
+  fetchCryptoData();
+});
+
+fetchCryptoData();  
 app.use('/stats', statsRoute);
 
 

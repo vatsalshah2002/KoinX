@@ -49,7 +49,7 @@ const fetchCryptoData = async () => {
     console.log(`${crypto.name} data saved to database`);
     console.log('Cryptocurrency data saved successfully');
   } catch (error) {
-    console.error('Error fetching crypto data:', error.message);
+    console.error('Error:', error.message);
   }
 };
 
